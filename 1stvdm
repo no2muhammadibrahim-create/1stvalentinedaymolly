@@ -1,60 +1,160 @@
-valentineName: "Molly"                   
-pageTitle: "Will You Be My Valentine? 💝" 
-
-
-floatingEmojis: {
-    hearts: ['❤️', '💖', '💝', '💗', '💓'],  
-    bears: ['🧸', '🐻']                       
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Will You Be My Valentine? 💝</title>
+<style>
+:root {
+  --bg-start: #ffafbd;
+  --bg-end: #ffc3a0;
+  --btn: #ff6b6b;
+  --btn-hover: #ff8787;
+  --text: #ff4757;
 }
 
-
-questions: {
-    first: {
-        text: "Do you like me?",                  
-        yesBtn: "Yes",                             
-        noBtn: "No",                               
-        secretAnswer: "I don't like you, I love you! ❤️"  
-    },
-    second: {
-        text: "How much do you love me?",          
-        startText: "This much!",                   
-        nextBtn: "Next ❤️"                         
-    },
-    third: {
-        text: "Will you be my Valentine...?",      
-        yesBtn: "Yes!",                            
-        noBtn: "No"                               
-    }
+* {
+  box-sizing: border-box;
+  font-family: 'Comic Sans MS', 'Poppins', cursive;
 }
 
-
-loveMessages: {
-    extreme: "WOOOOW You love me that much?? 🥰🚀💝",  
-    high: "To infinity and beyond! 🚀💝",              
-    normal: "And beyond! 🥰"                           
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--text);
 }
 
-
-celebration: {
-    title: "Yay! I'm the luckiest person...",     
-    message: "Now come get your gift...",          
-    emojis: "🎁💖🤗💝💋❤️💕"                        
+.container {
+  background: rgba(255,255,255,0.85);
+  padding: 30px 40px;
+  border-radius: 20px;
+  text-align: center;
+  width: 320px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
 
-
-colors: {
-    backgroundStart: "#ffafbd",      
-    backgroundEnd: "#ffc3a0",        
-    buttonBackground: "#ff6b6b",     
-    buttonHover: "#ff8787",          
-    textColor: "#ff4757"            
+h1 {
+  margin-bottom: 20px;
 }
 
-animations: {
-    floatDuration: "15s",           
-    floatDistance: "50px",          
-    bounceSpeed: "0.5s",            
-    heartExplosionSize: 1.5         
+button {
+  background: var(--btn);
+  border: none;
+  color: white;
+  padding: 12px 18px;
+  margin: 10px;
+  border-radius: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
 }
+
+button:hover {
+  background: var(--btn-hover);
+  transform: scale(1.1);
+}
+
+.slider {
+  width: 100%;
+}
+
+.floating {
+  position: absolute;
+  bottom: -50px;
+  animation: float 15s linear infinite;
+  font-size: 24px;
+  opacity: 0.8;
+}
+
+@keyframes float {
+  from { transform: translateY(0); }
+  to { transform: translateY(-110vh); }
+}
+
+.celebrate {
+  animation: bounce 0.5s infinite alternate;
+}
+
+@keyframes bounce {
+  from { transform: scale(1); }
+  to { transform: scale(1.05); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="app">
+  <h1>Do you like me?</h1>
+  <button onclick="likeYes()">Yes</button>
+  <button onclick="likeNo()">No</button>
+</div>
+
+<script>
+const app = document.getElementById("app");
+const name = "Molly";
+
+function likeYes() {
+  app.innerHTML = `
+    <h1>How much do you love me?</h1>
+    <input class="slider" type="range" min="0" max="100" value="50" oninput="loveLevel(this.value)">
+    <p id="loveText">This much!</p>
+    <button onclick="nextQuestion()">Next ❤️</button>
+  `;
+}
+
+function likeNo() {
+  alert("I don't like you, I love you! ❤️");
+}
+
+function loveLevel(val) {
+  const text = document.getElementById("loveText");
+  if (val > 80) text.textContent = "WOOOOW You love me that much?? 🥰🚀💝";
+  else if (val > 50) text.textContent = "To infinity and beyond! 🚀💝";
+  else text.textContent = "And beyond! 🥰";
+}
+
+function nextQuestion() {
+  app.innerHTML = `
+    <h1>Will you be my Valentine...?</h1>
+    <button onclick="celebrate()">Yes!</button>
+    <button onclick="runAway(this)">No</button>
+  `;
+}
+
+function runAway(btn) {
+  btn.style.position = "absolute";
+  btn.style.left = Math.random() * 80 + "%";
+  btn.style.top = Math.random() * 80 + "%";
+}
+
+function celebrate() {
+  app.innerHTML = `
+    <h1 class="celebrate">Yay! I'm the luckiest person...</h1>
+    <p>Now come get your gift...</p>
+    <div style="font-size:2rem;">🎁💖🤗💝💋❤️💕</div>
+  `;
+  explodeHearts();
+}
+
+function explodeHearts() {
+  const emojis = ['❤️','💖','💝','💗','💓','🧸','🐻'];
+  for (let i = 0; i < 30; i++) {
+    const span = document.createElement("span");
+    span.className = "floating";
+    span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    span.style.left = Math.random() * 100 + "vw";
+    span.style.animationDuration = 10 + Math.random() * 10 + "s";
+    document.body.appendChild(span);
+  }
+}
+</script>
+
+</body>
+</html>
 
 
